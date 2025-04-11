@@ -13,8 +13,10 @@ $(function () {
 });
 
 // Collapsible event
-document.querySelector('.collapsible').addEventListener('click', function() {
-    this.nextElementSibling.classList.toggle('show');
+document.querySelectorAll('button[class*="collapsible"]').forEach(button => {
+    button.addEventListener('click', function() {
+      this.nextElementSibling.classList.toggle('show');
+    });
   });
 
 // Google Form Submission - Alert Message for Success or Error
