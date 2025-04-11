@@ -15,7 +15,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" property="og:description" content="Explore the professional journey of a technical leader with a proven track record in driving innovation, leading teams, and delivering impactful solutions." />
-        <meta property="og:image" content="/assets/img/masthead.webp" />
+        <meta property="og:image" content="assets/img/masthead.webp" />
 	    <meta property="og:title" content="Technical Leader Driving Innovation. Impacts Through Expertise and Vision" />	
         <meta name="keywords" content="Nic Aslett, youtube, podcast, budgets, finances, financial interviews, budgeting help, saving money, budgeting stories, budgeting interviews, creating budgets, how to budget, track spending, track expenses, financial future, saving habits, denver colorado, budgeting success" />
 
@@ -51,15 +51,24 @@
         </nav>
 
         <!-- Header-->
-        <header class="masthead text-center text-white">
-            <div class="masthead-content">
-                <div class="container">
-                    <!-- <h1 class="masthead-heading mb-0">Nic Aslett</h1> -->
-                    <h1 class="masthead-heading mb-0">Technical Leader Innovating with<br>Expertise and Vision</h1>
-                    <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#about">Learn More</a>
+        <head>
+            <style>
+              .masthead-custom {
+                background-image: linear-gradient(rgba(49, 49, 49, 0.5), rgba(49, 49, 49, 0.5)), url('https://www.nicaslett.info/assets/img/masthead.webp') !important; /* Overrides stylesheet */
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+              }
+            </style>
+          </head>
+            <header class="masthead masthead-custom text-center text-white">
+                <div class="masthead-content">
+                    <div class="container">
+                        <h1 class="masthead-heading mb-0">Technical Leader Innovating with<br>Expertise and Vision</h1>
+                        <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#about">Learn More</a>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
         <!-- Content About More About My Brand Section -->
         <section id="about">
