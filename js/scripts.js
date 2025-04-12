@@ -213,10 +213,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const words = text.split(/\s+/).filter(word => word !== ""); // Split by spaces and filter out empty strings
         const wordCount = words.length;
 
-        commentsWordCount.textContent = `${wordCount} / 30 words`;
+        commentsWordCount.textContent = `${wordCount} / 5 words`;
 
-        if (wordCount < 30) {
-            commentsTextarea.setCustomValidity("Please enter at least 30 words.");
+        if (wordCount < 5) {
+            commentsTextarea.setCustomValidity("Please enter at least 5 words.");
             minWordFeedback.style.display = "block"; // Show the feedback
         } else {
             commentsTextarea.setCustomValidity(""); // Reset custom validity
@@ -260,7 +260,7 @@ function resetGoogleForm() {
     $('#phonenumber').val("");
     $('#age').val("");
     $('#socialMediaHandles').val("");
-    $('#occupation').val("");
+    $('#company').val("");
     $('#budgetingRating').val(5);
     $('#sliderValue').text(5);
     $('input[name="gridRadios"]:first').prop('checked', true);
@@ -308,7 +308,7 @@ function submitGoogleForm(event) {
     var phoneNumber = $('#phonenumber').val();
     var age = $('#age').val();
     var socialMediaHandles = $('#socialMediaHandles').val();
-    var occupation = $('#occupation').val();
+    var company = $('#company').val();
     var budgetingRating = $('#budgetingRating').val();
     var annualIncome = $('input[name="gridRadios"]:checked').val();
     var inDenver = $('input[name="inDenver"]:checked').val();
@@ -340,7 +340,7 @@ function submitGoogleForm(event) {
             "phoneNumber": phoneNumber,
             "age": age,
             "socialMediaHandles": socialMediaHandles,
-            "occupation": occupation,
+            "company": company,
             "budgetingRating": budgetingRating,
             "annualIncome": annualIncome,
             "rentMonthly": rentMonthly,

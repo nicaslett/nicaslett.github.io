@@ -15,7 +15,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" property="og:description" content="Explore the professional journey of a technical leader with a proven track record in driving innovation, leading teams, and delivering impactful solutions." />
-        <meta property="og:image" content="assets/img/masthead.webp" />
+        <meta property="og:image" content="https://www.nicaslett.info/assets/img/about-1.webp" />
 	    <meta property="og:title" content="Technical Leader Driving Innovation. Impacts Through Expertise and Vision" />	
         <meta name="keywords" content="Nic Aslett, youtube, podcast, budgets, finances, financial interviews, budgeting help, saving money, budgeting stories, budgeting interviews, creating budgets, how to budget, track spending, track expenses, financial future, saving habits, denver colorado, budgeting success" />
 
@@ -58,14 +58,17 @@
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
+                min-height: 50vh;
+                height: auto;
+                padding: 0rem 0;
               }
             </style>
           </head>
             <header class="masthead masthead-custom text-center text-white">
                 <div class="masthead-content">
                     <div class="container">
-                        <h1 class="masthead-heading mb-0">Technical Leader Innovating with<br>Expertise and Vision</h1>
-                        <a class="btn btn-primary btn-xl rounded-pill mt-5" href="https://drive.google.com/file/d/1bUb2x7nHzDeDBftG6KpO2eD4o_veWQzN/view?usp=sharing" target="_blank">Résumé</a>
+                        <h1 class="masthead-heading mb-5">Technical Leader Innovating with<br>Expertise and Vision</h1>
+                        <a class="btn btn-primary btn-md rounded-top mt-3" href="https://drive.google.com/file/d/1bUb2x7nHzDeDBftG6KpO2eD4o_veWQzN/view?usp=sharing" target="_blank" style="font-size: 20px; text-transform: none; background-color: #e7e7e7; border-color: #3f3f3f; color: #000000;">Résumé</a>
                     </div>
                 </div>
             </header>
@@ -73,12 +76,10 @@
         <!-- Content About Who I Am Section -->
         <section id="about">
 
-
             <!--<button class="collapsible-centered">Click to See Résumé</button>
             <div class="content row align-items-center justify-content-center text-center">
               <iframe src="https://drive.google.com/file/d/1bUb2x7nHzDeDBftG6KpO2eD4o_veWQzN/preview" allow="autoplay" frameborder="0" title="Embedded Résumé"></iframe>
             </div> -->
-
 
             <div class="sticky-header">
                 <div class="container custom-p">
@@ -261,6 +262,14 @@
                                 <label for="email-catch" class="form-label">Email Catch</label>
                                 <input type="email" class="form-control" name="email-catch" id="email-catch" />
                             </div>
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3 text-center">
+                                    <label for="company" class="form-label">Company <span class="text-required">*</span></label>
+                                    <input type="text" class="form-control" id="company" name="company" required maxlength="1000">
+                                    <div class="valid-feedback">Looks Good!</div>
+                                    <div class="invalid-feedback">Please provide the company name.</div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <label for="firstname" class="form-label">First Name <span class="text-required">*</span></label>
                                 <input type="text" class="form-control" id="firstname" name="firstname" required maxlength="1000" pattern="[A-Za-z\s\-']+">
@@ -285,20 +294,14 @@
                                 <div class="valid-feedback">Looks Good!</div>
                                 <div class="invalid-feedback">Please provide a valid 10-digit phone number.</div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="occupation" class="form-label">Occupation <span class="text-required">*</span></label>
-                                <input type="text" class="form-control" id="occupation" name="occupation" required maxlength="1000">
-                                <div class="valid-feedback">Looks Good!</div>
-                                <div class="invalid-feedback">Please provide your job title/industry.</div>
-                            </div>
                             <div class="col-md-12">
                                 <label for="comments" class="form-label">Tell me more about what you're looking for and I will let you know how I fit! <span class="text-required">*</span></label>
                                 <textarea class="form-control" aria-label="Comments" id="comments" name="comments" required maxlength="10000" rows="5"></textarea>
                                 <div class="d-flex justify-content-between">
                                     <div id="comments-count" class="form-text text-muted">0 / 10000 characters</div>
-                                    <div id="comments-word-count" class="form-text text-muted">0 / 30 word minimum</div>
+                                    <div id="comments-word-count" class="form-text text-muted">0 / 5 word minimum</div>
                                 </div>
-                                    <div class="invalid-feedback" id="min-word-feedback">Please provide at least 30 words.</div>
+                                    <div class="invalid-feedback" id="min-word-feedback">Please provide at least 5 words.</div>
                             </div>
 
                             <div class="col-12">
