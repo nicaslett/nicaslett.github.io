@@ -271,30 +271,22 @@
                         <h2 class="display-4" style="margin-top:35px;">Reach out to have a conversation!</h2>
                         <p style="margin-bottom: 2rem;">If you are looking for the perfect candidate, look no further! If you want to get in contact with me, fill out this basic form and I will respond as soon as available!</p>
                         
-                        <form class="row g-3 needs-validation" id="join-show-form" style="margin-bottom: 50px;background-color: #e7e7e7;border-radius: 8px;padding-left: 0.5rem;padding-right:0.5rem;" onsubmit="return submitGoogleForm(event)" novalidate="">
+                        <form class="row g-3 needs-validation" id="join-show-form" style="margin-bottom: 50px;background-color: #e7e7e7;border-radius: 8px;padding-left: 0.5rem;padding-right:0.5rem;padding-top:0.1rem;" onsubmit="return submitGoogleForm(event)" novalidate="">
                             <div class="col-12" id="email-catch-div">
                                 <label for="email-catch" class="form-label">Email Catch</label>
                                 <input type="email" class="form-control" name="email-catch" id="email-catch" />
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 offset-md-3 text-center">
-                                    <label for="company" class="form-label" style="font-size: 1.2rem;">Company <span class="text-required">*</span></label>
-                                    <input type="text" class="form-control" id="company" name="company" required maxlength="1000">
-                                    <div class="valid-feedback">Looks Good!</div>
-                                    <div class="invalid-feedback">Please provide the company name.</div>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="company" class="form-label">Company <span class="text-required">*</span></label>
+                                <input type="text" class="form-control" id="company" name="company" required maxlength="1000">
+                                <div class="valid-feedback">Looks Good!</div>
+                                <div class="invalid-feedback">Please provide the company name.</div>
                             </div>
                             <div class="col-md-6">
-                                <label for="firstname" class="form-label">First Name <span class="text-required">*</span></label>
+                                <label for="firstname" class="form-label">Name <span class="text-required">*</span></label>
                                 <input type="text" class="form-control" id="firstname" name="firstname" required maxlength="1000" pattern="[A-Za-z\s\-']+">
                                 <div class="valid-feedback">Looks Good!</div>
                                 <div class="invalid-feedback">Please provide a valid first name (letters, spaces, hyphens, and apostrophes only).</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lastname" class="form-label">Last Name <span class="text-required">*</span></label>
-                                <input type="text" class="form-control" id="lastname" name="lastname" required maxlength="1000" pattern="[A-Za-z\s\-']+">
-                                <div class="valid-feedback">Looks Good!</div>
-                                <div class="invalid-feedback">Please provide a valid last name (letters, spaces, hyphens, and apostrophes only).</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="emailaddress" class="form-label">Email Address <span class="text-required">*</span></label>
