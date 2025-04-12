@@ -54,14 +54,28 @@
         <head>
             <style>
               .masthead-custom {
-                background-image: url('https://www.nicaslett.info/assets/img/masthead.webp') !important; /* Overrides stylesheet */
+                background-image: linear-gradient(to top, #c9c7c742 0%, rgba(201, 199, 199, 0.274) 0%, transparent 50%), url('https://www.nicaslett.info/assets/img/masthead.webp') !important; /* Overrides stylesheet */
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
                 min-height: 50vh;
-                height: auto;
+                height: 60vh;
                 padding: 0rem 0;
+                margin-bottom: 0;
               }
+            #about {
+                padding-top: 0;
+            }
+            .sticky-header {
+            position: sticky;
+            top: 60px; /* Offset to clear navbar (adjust to your navbar height) */
+            padding: 0; /* Remove all padding */
+            margin: 0; /* Ensure no extra spacing */
+            z-index: 1000; /* Stay above content */
+            }
+            .sticky-header .custom-p {
+                padding: 30; /* Remove custom-p padding */
+            }
             </style>
           </head>
             <header class="masthead masthead-custom text-center text-white">
