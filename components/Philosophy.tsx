@@ -1,7 +1,8 @@
 "use client";
 import { ScrollReveal } from "./ScrollReveal";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const capabilities = [
   {
@@ -28,17 +29,59 @@ const capabilities = [
 
 export const Philosophy = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 3 >= capabilities.length ? 0 : prev + 3));
-    }, 3300);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    return () => clearInterval(timer);
+    // Initial check
+    checkMobile();
+
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const itemsPerPage = isMobile ? 1 : 3;
+  const intervalTime = isMobile ? 4300 : 6500;
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => {
+        if (isMobile) {
+            return (prev + 1) % capabilities.length;
+        } else {
+            const nextIndex = prev + 3;
+            return nextIndex >= capabilities.length ? 0 : nextIndex;
+        }
+    });
+  }, [isMobile]);
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => {
+        if (isMobile) {
+             return (prev - 1 + capabilities.length) % capabilities.length;
+        } else {
+             const desktopStep = 3;
+             const maxStartIndex = Math.floor((capabilities.length - 1) / desktopStep) * desktopStep;
+             return prev - desktopStep < 0 ? maxStartIndex : prev - desktopStep;
+        }
+    });
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      handleNext();
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [isPaused, intervalTime, handleNext]);
+
   const visibleCapabilities = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < itemsPerPage; i++) {
       visibleCapabilities.push(capabilities[(currentIndex + i) % capabilities.length]);
   }
 
@@ -48,26 +91,49 @@ export const Philosophy = () => {
          <h2 className="font-serif text-3xl md:text-4xl text-slate-100 mb-12 text-center">Core Capabilities</h2>
       </ScrollReveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 overflow-hidden min-h-[300px]">
-        <AnimatePresence mode="popLayout">
-            {visibleCapabilities.map((capability, index) => (
-               <motion.div
-                  key={`${currentIndex}-${index}`}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="h-full"
-               >
-                  <div className="p-8 border border-slate-700/50 rounded-2xl bg-slate-900 hover:border-blue-500/30 transition-colors duration-300 h-full">
-                      <h3 className="text-2xl font-serif text-slate-100 mb-4">{capability.title}</h3>
-                      <p className="text-slate-400 text-lg mb-6 font-sans">
-                          {capability.description}
-                      </p>
-                  </div>
-               </motion.div>
-            ))}
-        </AnimatePresence>
+      <div
+        className="relative group pb-16 md:pb-0"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+          {/* Navigation Buttons */}
+          <button
+            onClick={handlePrev}
+            className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-0 left-[calc(50%-3rem)] translate-y-0 md:bottom-auto md:left-0 md:top-1/2 md:-translate-y-1/2 md:-translate-x-12"
+            aria-label="Previous capability"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <button
+            onClick={handleNext}
+            className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-0 right-[calc(50%-3rem)] translate-y-0 md:bottom-auto md:right-0 md:top-1/2 md:-translate-y-1/2 md:translate-x-12"
+            aria-label="Next capability"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          <div className={`grid gap-12 overflow-hidden min-h-[300px] ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
+            <AnimatePresence mode="popLayout">
+                {visibleCapabilities.map((capability, index) => (
+                   <motion.div
+                      key={`${currentIndex}-${index}`}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="h-full"
+                   >
+                      <div className="p-8 border border-slate-700/50 rounded-2xl bg-slate-900 hover:border-blue-500/30 transition-colors duration-300 h-full">
+                          <h3 className="text-2xl font-serif text-slate-100 mb-4">{capability.title}</h3>
+                          <p className="text-slate-400 text-lg mb-6 font-sans">
+                              {capability.description}
+                          </p>
+                      </div>
+                   </motion.div>
+                ))}
+            </AnimatePresence>
+          </div>
       </div>
     </section>
   )
