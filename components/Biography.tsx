@@ -8,7 +8,7 @@ export const Biography = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"]
+    offset: ["start 0.75", "center center"]
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
