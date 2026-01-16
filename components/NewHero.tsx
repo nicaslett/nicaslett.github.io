@@ -16,7 +16,7 @@ export const NewHero = () => {
       </ScrollReveal>
 
       <ScrollReveal delay={0.2}>
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col items-center sm:flex-row gap-4">
           <button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             className="w-64 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-medium transition-all text-lg"
@@ -38,7 +38,7 @@ export const NewHero = () => {
         style={{ opacity }}
         className="fixed bottom-8 left-0 right-0 z-50 flex flex-col items-center justify-center md:hidden pointer-events-none text-slate-400"
       >
-        <span className="text-xs uppercase tracking-widest mb-2">Scroll to explore</span>
+        <span className="text-xs uppercase tracking-widest mb-2">Scroll to learn more</span>
         <ChevronDown className="animate-bounce" size={20} />
       </motion.div>
     </section>
