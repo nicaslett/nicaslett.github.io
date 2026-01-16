@@ -140,7 +140,6 @@ export const ChatWidget = () => {
             className="fixed bottom-4 right-4 z-50 w-[90vw] h-[80vh] sm:w-[400px] sm:h-[600px] bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             style={{
                 // Custom Properties for n8n chat
-                // @ts-expect-error - Custom properties not in React.CSSProperties
                 '--chat--color-primary': '#334155', // slate-700
                 '--chat--color-secondary': '#475569', // slate-600
                 '--chat--color-background': '#020617', // slate-950

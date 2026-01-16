@@ -5,7 +5,7 @@ export const Philosophy = () => {
   return (
     <section className="py-20 px-6 md:px-20 max-w-7xl mx-auto bg-slate-900/50 rounded-3xl my-10">
       <ScrollReveal>
-         <h2 className="font-serif text-3xl md:text-4xl text-slate-100 mb-12 text-center">Philosophy & Capabilities</h2>
+         <h2 className="font-serif text-3xl md:text-4xl text-slate-100 mb-12 text-center">Core Capabilities</h2>
       </ScrollReveal>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
