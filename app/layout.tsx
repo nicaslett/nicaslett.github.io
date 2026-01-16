@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { ChatWidget } from "@/components/ChatWidget";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -8,6 +9,11 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 export const metadata: Metadata = {
   title: "Nic Aslett | Technical Leader",
   description: "Personal portfolio of Nic Aslett, a Technical Leader specializing in IT Architecture and Stability at Scale.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#020617",
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({
@@ -19,6 +25,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${playfair.variable} bg-slate-950 text-slate-100 antialiased font-sans`}>
         {children}
+        <ChatWidget />
       </body>
     </html>
   );
