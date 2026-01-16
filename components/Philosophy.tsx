@@ -1,7 +1,7 @@
 "use client";
 import { ScrollReveal } from "./ScrollReveal";
 import { useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const capabilities = [
@@ -27,8 +27,26 @@ const capabilities = [
   }
 ];
 
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 50 : -50,
+    opacity: 0
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 50 : -50,
+    opacity: 0
+  })
+};
+
 export const Philosophy = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -48,6 +66,7 @@ export const Philosophy = () => {
   const intervalTime = isMobile ? 4300 : 6500;
 
   const handleNext = useCallback(() => {
+    setDirection(1);
     setCurrentIndex((prev) => {
         if (isMobile) {
             return (prev + 1) % capabilities.length;
@@ -59,6 +78,7 @@ export const Philosophy = () => {
   }, [isMobile]);
 
   const handlePrev = useCallback(() => {
+    setDirection(-1);
     setCurrentIndex((prev) => {
         if (isMobile) {
              return (prev - 1 + capabilities.length) % capabilities.length;
@@ -69,6 +89,17 @@ export const Philosophy = () => {
         }
     });
   }, [isMobile]);
+
+  const onDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: PanInfo) => {
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = Math.abs(offset.x) * velocity.x;
+
+    if (swipePower < -swipeConfidenceThreshold) {
+      handleNext();
+    } else if (swipePower > swipeConfidenceThreshold) {
+      handlePrev();
+    }
+  };
 
   useEffect(() => {
     if (isPaused) return;
@@ -97,34 +128,47 @@ export const Philosophy = () => {
         onMouseLeave={() => setIsPaused(false)}
       >
           {/* Navigation Buttons */}
-          <button
-            onClick={handlePrev}
-            className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-0 left-[calc(50%-3rem)] translate-y-0 md:bottom-auto md:left-0 md:top-1/2 md:-translate-y-1/2 md:-translate-x-12"
-            aria-label="Previous capability"
-          >
-            <ChevronLeft size={24} />
-          </button>
+          {!isMobile && (
+             <>
+                <button
+                    onClick={handlePrev}
+                    className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-auto left-0 top-1/2 -translate-y-1/2 -translate-x-12"
+                    aria-label="Previous capability"
+                >
+                    <ChevronLeft size={24} />
+                </button>
 
-          <button
-            onClick={handleNext}
-            className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-0 right-[calc(50%-3rem)] translate-y-0 md:bottom-auto md:right-0 md:top-1/2 md:-translate-y-1/2 md:translate-x-12"
-            aria-label="Next capability"
-          >
-            <ChevronRight size={24} />
-          </button>
+                <button
+                    onClick={handleNext}
+                    className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-auto right-0 top-1/2 -translate-y-1/2 translate-x-12"
+                    aria-label="Next capability"
+                >
+                    <ChevronRight size={24} />
+                </button>
+             </>
+          )}
 
           <div className={`grid gap-12 overflow-hidden min-h-[300px] ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
                 {visibleCapabilities.map((capability, index) => (
                    <motion.div
                       key={`${currentIndex}-${index}`}
-                      initial={{ opacity: 0, x: 50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -50 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="h-full"
+                      custom={direction}
+                      variants={variants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        opacity: { duration: 0.2 }
+                      }}
+                      drag={isMobile ? "x" : false}
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={1}
+                      onDragEnd={onDragEnd}
+                      className="h-full touch-pan-y"
                    >
-                      <div className="p-8 border border-slate-700/50 rounded-2xl bg-slate-900 hover:border-blue-500/30 transition-colors duration-300 h-full">
+                      <div className="p-8 border border-slate-700/50 rounded-2xl bg-slate-900 hover:border-blue-500/30 transition-colors duration-300 h-full select-none cursor-grab active:cursor-grabbing">
                           <h3 className="text-2xl font-serif text-slate-100 mb-4">{capability.title}</h3>
                           <p className="text-slate-400 text-lg mb-6 font-sans">
                               {capability.description}
