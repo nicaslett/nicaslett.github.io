@@ -3,18 +3,18 @@ import { ScrollReveal } from "./ScrollReveal";
 
 const milestones = [
     {
-        title: "Technical Expertise",
-        description: "Built the bedrock of my career on hands-on engineering. Mastered Python, Automation, and Bash to automate complex workflows and ensure system reliability.",
-        year: "15 Years"
+        title: "Engineering & Systems Thinking",
+        description: "I started close to the work: building, automating, and maintaining systems where reliability mattered. That time shaped how I think - deeply, pragmatically, and with respect for what breaks when decisions are made in isolation.",
+        year: "Foundation"
     },
     {
-        title: "Process Optimization",
-        description: "Streamlined operations using the Atlassian Stack and Jira. Integrated disparate systems to create seamless, efficient development lifecycles.",
+        title: "Process, Scale, and Collaboration",
+        description: "As responsibility grew, my focus expanded from systems to workflows and teams. I became known for untangling messy processes, integrating disconnected tools, and helping technical teams operate with clarity instead of constant urgency.",
         year: "Transition"
     },
     {
         title: "Strategic Leadership",
-        description: "Transitioned to VP-level strategy, earning SAFe/Scrum certifications. Focused on turning around departments and aligning technical execution with business objectives.",
+        description: "Today, I operate at the executive level, aligning technology with business outcomes. My role is less about individual solutions and more about direction: setting priorities, reducing friction, and ensuring execution supports long-term growth.",
         year: "Current"
     }
 ];

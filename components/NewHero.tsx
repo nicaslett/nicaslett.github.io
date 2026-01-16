@@ -10,9 +10,14 @@ export const NewHero = () => {
         </h1>
       </ScrollReveal>
       <ScrollReveal delay={0.2}>
-        <h2 className="text-xl md:text-2xl text-slate-400 max-w-2xl font-light mb-12">
-          Bridging the gap between complex engineering and strategic business goals.
-        </h2>
+        <div className="text-lg md:text-xl text-slate-400 max-w-3xl font-light mb-12 space-y-6">
+          <p>
+            I’ve spent my career working where complexity lives - inside systems, teams, and organizations that have outgrown their original design. My foundation is technical, but my impact has always come from understanding how technology, people, and process intersect.
+          </p>
+          <p>
+            Over time, that perspective pulled me into leadership. Not to move further away from the work, but to influence it at scale. Today, I focus on creating clarity where things feel tangled - aligning execution with strategy, stabilizing environments, and building systems that people actually trust and want to use.
+          </p>
+        </div>
       </ScrollReveal>
       <ScrollReveal delay={0.4}>
         <div className="flex flex-col sm:flex-row gap-4">
