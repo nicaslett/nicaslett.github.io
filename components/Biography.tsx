@@ -18,7 +18,7 @@ export const Biography = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.3}>
                 <p className="text-lg md:text-xl text-slate-300 leading-relaxed font-sans">
-                    Over the last 5 years, I’ve transitioned that technical depth into high-level leadership. I specialize in driving transformational change—taking underperforming departments and turning them around by optimizing processes and fostering genuine collaboration. I bridge the divide between technical teams and executive goals, ensuring that stability and innovation go hand in hand.
+                    Over the last 5 years, I’ve transitioned that technical depth into high-level leadership. I specialize in driving transformational change - taking underperforming departments and turning them around by optimizing processes and fostering genuine collaboration. I bridge the divide between technical teams and executive goals, ensuring that stability and innovation go hand in hand.
                 </p>
             </ScrollReveal>
          </div>
