@@ -3,19 +3,19 @@ import { ScrollReveal } from "./ScrollReveal";
 
 const milestones = [
     {
-        title: "Deep Technical Roots",
-        description: "Built the bedrock of my career on hands-on engineering. Mastered Python, Bash, and Jenkins to automate complex workflows and ensure system reliability.",
-        year: "The Foundation"
+        title: "Technical Expertise",
+        description: "Built the bedrock of my career on hands-on engineering. Mastered Python, Automation, and Bash to automate complex workflows and ensure system reliability.",
+        year: "15 Years"
     },
     {
-        title: "Process Mastery",
+        title: "Process Optimization",
         description: "Streamlined operations using the Atlassian Stack and Jira. Integrated disparate systems to create seamless, efficient development lifecycles.",
-        year: "Integration"
+        year: "Transition"
     },
     {
         title: "Strategic Leadership",
         description: "Transitioned to VP-level strategy, earning SAFe/Scrum certifications. Focused on turning around departments and aligning technical execution with business objectives.",
-        year: "Leadership"
+        year: "Current"
     }
 ];
 

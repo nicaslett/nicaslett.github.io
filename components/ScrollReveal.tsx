@@ -7,9 +7,10 @@ interface ScrollRevealProps {
   children: ReactNode;
   width?: "fit-content" | "100%";
   delay?: number;
+  className?: string;
 }
 
-export const ScrollReveal = ({ children, width = "fit-content", delay = 0 }: ScrollRevealProps) => {
+export const ScrollReveal = ({ children, width = "100%", delay = 0, className = "" }: ScrollRevealProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,6 +18,7 @@ export const ScrollReveal = ({ children, width = "fit-content", delay = 0 }: Scr
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: "easeOut", delay }}
       style={{ width }}
+      className={className}
     >
       {children}
     </motion.div>
