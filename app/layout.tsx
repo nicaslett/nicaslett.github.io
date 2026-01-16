@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ChatWidget } from "@/components/ChatWidget";
+import { StickyHeader } from "@/components/StickyHeader";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${playfair.variable} bg-slate-950 text-slate-100 antialiased font-sans`}>
+        <StickyHeader />
         {children}
         <ChatWidget />
       </body>

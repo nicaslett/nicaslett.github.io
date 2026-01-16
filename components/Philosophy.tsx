@@ -28,8 +28,8 @@ const capabilities = [
 ];
 
 const variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 50 : -50,
+  enter: (props: { direction: number, isMobile: boolean }) => ({
+    x: props.isMobile ? 20 : (props.direction > 0 ? 50 : -50),
     opacity: 0
   }),
   center: {
@@ -37,9 +37,9 @@ const variants = {
     x: 0,
     opacity: 1
   },
-  exit: (direction: number) => ({
+  exit: (props: { direction: number, isMobile: boolean }) => ({
     zIndex: 0,
-    x: direction < 0 ? 50 : -50,
+    x: props.isMobile ? -20 : (props.direction < 0 ? 50 : -50),
     opacity: 0
   })
 };
@@ -49,6 +49,7 @@ export const Philosophy = () => {
   const [direction, setDirection] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [lastInteraction, setLastInteraction] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -65,7 +66,8 @@ export const Philosophy = () => {
   const itemsPerPage = isMobile ? 1 : 3;
   const intervalTime = isMobile ? 4300 : 6500;
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback((manual = false) => {
+    if (manual) setLastInteraction(Date.now());
     setDirection(1);
     setCurrentIndex((prev) => {
         if (isMobile) {
@@ -77,7 +79,8 @@ export const Philosophy = () => {
     });
   }, [isMobile]);
 
-  const handlePrev = useCallback(() => {
+  const handlePrev = useCallback((manual = false) => {
+    if (manual) setLastInteraction(Date.now());
     setDirection(-1);
     setCurrentIndex((prev) => {
         if (isMobile) {
@@ -95,9 +98,9 @@ export const Philosophy = () => {
     const swipePower = Math.abs(offset.x) * velocity.x;
 
     if (swipePower < -swipeConfidenceThreshold) {
-      handleNext();
+      handleNext(true);
     } else if (swipePower > swipeConfidenceThreshold) {
-      handlePrev();
+      handlePrev(true);
     }
   };
 
@@ -109,7 +112,7 @@ export const Philosophy = () => {
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [isPaused, intervalTime, handleNext]);
+  }, [isPaused, intervalTime, handleNext, lastInteraction]);
 
   const visibleCapabilities = [];
   for (let i = 0; i < itemsPerPage; i++) {
@@ -131,7 +134,7 @@ export const Philosophy = () => {
           {!isMobile && (
              <>
                 <button
-                    onClick={handlePrev}
+                    onClick={() => handlePrev(true)}
                     className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-auto left-0 top-1/2 -translate-y-1/2 -translate-x-12"
                     aria-label="Previous capability"
                 >
@@ -139,7 +142,7 @@ export const Philosophy = () => {
                 </button>
 
                 <button
-                    onClick={handleNext}
+                    onClick={() => handleNext(true)}
                     className="absolute z-10 p-2 bg-slate-800/80 rounded-full text-slate-300 hover:text-white hover:bg-slate-700 transition-all border border-slate-700 hover:border-slate-500 cursor-pointer bottom-auto right-0 top-1/2 -translate-y-1/2 translate-x-12"
                     aria-label="Next capability"
                 >
@@ -149,17 +152,17 @@ export const Philosophy = () => {
           )}
 
           <div className={`grid gap-12 overflow-hidden min-h-[300px] ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <AnimatePresence initial={false} custom={{ direction, isMobile }} mode="popLayout">
                 {visibleCapabilities.map((capability, index) => (
                    <motion.div
                       key={`${currentIndex}-${index}`}
-                      custom={direction}
+                      custom={{ direction, isMobile }}
                       variants={variants}
                       initial="enter"
                       animate="center"
                       exit="exit"
                       transition={{
-                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        x: { type: "spring", stiffness: isMobile ? 200 : 300, damping: 30 },
                         opacity: { duration: 0.2 }
                       }}
                       drag={isMobile ? "x" : false}
