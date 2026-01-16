@@ -1,193 +1,216 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Define a type for the n8n createChat function to avoid 'any'
-type CreateChatOptions = {
-  webhookUrl: string;
-  target: string | HTMLElement;
-  mode?: 'window' | 'fullscreen';
-  collapsed?: boolean;
-  showWelcomeScreen?: boolean;
-  initialMessages?: string[];
-  i18n?: Record<string, unknown>;
-  theme?: Record<string, unknown>;
-};
-
-type N8nCreateChat = (options: CreateChatOptions) => void;
-
-interface WindowWithN8n extends Window {
-  n8nCreateChat?: N8nCreateChat;
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
 }
 
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-  const isInitializedRef = useRef(false); // Ref to track initialization status
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'init-1',
+      role: 'assistant',
+      text: 'Hi there! How can I help you today?',
+    },
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState('');
 
-  // Load the script immediately on mount
-  const loadScript = () => {
-    if (document.getElementById('n8n-chat-script')) return;
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-    const script = document.createElement('script');
-    script.id = 'n8n-chat-script';
-    script.type = 'module';
-    script.innerHTML = `
-      import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
-      window.n8nCreateChat = createChat;
-      window.dispatchEvent(new Event('n8n-chat-loaded'));
-    `;
-    document.body.appendChild(script);
-  };
-
-  const focusInput = () => {
-    // Retry focusing for a while as the chat renders asynchronously
-    let attempts = 0;
-    const maxAttempts = 20; // 2 seconds (assuming 100ms interval)
-
-    const interval = setInterval(() => {
-      attempts++;
-      const container = chatContainerRef.current;
-      if (!container) return;
-
-      const input = container.querySelector('textarea, input') as HTMLElement;
-      if (input) {
-        input.focus();
-        if (document.activeElement === input) {
-            clearInterval(interval);
-        }
-      }
-
-      if (attempts >= maxAttempts) clearInterval(interval);
-    }, 100);
-  };
-
-  const initializeChat = () => {
-    if (!(window as unknown as WindowWithN8n).n8nCreateChat || !chatContainerRef.current) return;
-
-    // Prevent double initialization using ref
-    if (isInitializedRef.current) return;
-
-    // Fallback check on content
-    if (chatContainerRef.current.innerHTML !== '') {
-        isInitializedRef.current = true;
-        return;
-    }
-
-    (window as unknown as WindowWithN8n).n8nCreateChat?.({
-      webhookUrl: 'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat',
-      target: chatContainerRef.current,
-      mode: 'fullscreen', // Fills the target container
-      showWelcomeScreen: false,
-      initialMessages: [
-        'Hi there! How can I help you today?'
-      ],
-      i18n: {
-        en: {
-          title: 'Assistant',
-          getStarted: 'Start Chat',
-          inputPlaceholder: 'Type your message...',
-        },
-      },
-    });
-
-    isInitializedRef.current = true;
-
-    // Attempt to focus the input
-    focusInput();
-  };
-
+  // Initialize Session ID
   useEffect(() => {
-    // Start loading script on mount
-    loadScript();
-
-    const handleScriptLoaded = () => {
-      setIsLoaded(true);
-    };
-
-    window.addEventListener('n8n-chat-loaded', handleScriptLoaded);
-
-    // Check if already loaded
-    if ((window as unknown as WindowWithN8n).n8nCreateChat) {
-      setIsLoaded(true);
+    let storedSessionId = localStorage.getItem('chat_session_id');
+    if (!storedSessionId) {
+      storedSessionId = crypto.randomUUID();
+      localStorage.setItem('chat_session_id', storedSessionId);
     }
-
-    return () => {
-      window.removeEventListener('n8n-chat-loaded', handleScriptLoaded);
-    };
+    setSessionId(storedSessionId);
   }, []);
 
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
-    // Initialize chat when open and loaded
-    if (isOpen && isLoaded && !isInitializedRef.current && chatContainerRef.current) {
-        initializeChat();
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [isOpen, isLoaded]);
+  }, [messages, isOpen]);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300); // Wait for animation
+    }
+  }, [isOpen]);
+
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+
+    if (!inputValue.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      text: inputValue.trim(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(
+        'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'sendMessage',
+            sessionId: sessionId,
+            chatInput: userMessage.text,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      // Assuming the API returns an object with an 'output' field containing the text
+      // Adjust this based on the actual API response structure if needed
+      const botText = data.output || "I'm sorry, I couldn't process that.";
+
+      const botMessage: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: botText,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: "I'm having trouble connecting right now. Please try again later.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+      // Keep focus on input after sending
+      setTimeout(() => {
+          inputRef.current?.focus();
+      }, 10);
+    }
   };
 
-  const chatVariants: Variants = {
-    open: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      display: "flex",
-      transition: { duration: 0.2 }
-    },
-    closed: {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      display: "none",
-      transition: { duration: 0.2 }
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
   return (
     <>
-      <motion.div
-        initial="closed"
-        animate={isOpen ? 'open' : 'closed'}
-        variants={chatVariants}
-        className="fixed bottom-4 right-4 z-50 w-[90vw] h-[80vh] sm:w-[400px] sm:h-[600px] bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-        style={{
-            // Custom Properties for n8n chat
-            '--chat--color-primary': '#334155', // slate-700
-            '--chat--color-secondary': '#475569', // slate-600
-            '--chat--color-background': '#020617', // slate-950
-            '--chat--color-font': '#f8fafc', // slate-50
-            '--chat--color-input': '#1e293b', // slate-800
-            '--chat--color-input-font': '#f8fafc',
-            '--chat--toggle--background': '#334155',
-            '--chat--toggle--hover--background': '#475569',
-            '--chat--message--bot--background': '#1e293b', // slate-800
-            '--chat--message--bot--font': '#f8fafc',
-            '--chat--message--user--background': '#334155', // slate-700
-            '--chat--message--user--font': '#f8fafc',
-        } as React.CSSProperties}
-      >
-          {/* Header for Close Button */}
-          <div className="absolute top-2 right-2 z-10">
-            <button onClick={() => setIsOpen(false)} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-20 right-4 z-50 w-[90vw] sm:w-[350px] h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl flex flex-col overflow-hidden"
+          >
+            {/* Header */}
+            <div className="bg-slate-800 p-4 flex items-center justify-between border-b border-slate-700">
+              <h3 className="text-slate-100 font-serif font-medium text-lg">Assistant</h3>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700"
+                aria-label="Close chat"
+              >
                 <X size={20} />
-            </button>
-          </div>
+              </button>
+            </div>
 
-          {/* Chat Container */}
-          <div ref={chatContainerRef} className="w-full h-full" />
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'bg-blue-600 text-white rounded-br-none'
+                        : 'bg-slate-800 text-slate-200 rounded-bl-none border border-slate-700'
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-slate-800 rounded-2xl rounded-bl-none px-4 py-3 border border-slate-700">
+                    <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-      </motion.div>
+            {/* Input Area */}
+            <div className="p-4 bg-slate-900 border-t border-slate-800">
+              <form
+                onSubmit={handleSendMessage}
+                className="flex items-center gap-2"
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type a message..."
+                  className="flex-1 bg-slate-950 text-slate-200 rounded-lg px-4 py-3 text-sm border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-500 transition-all"
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !inputValue.trim()}
+                  className="bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-white p-3 rounded-lg transition-colors flex-shrink-0"
+                  aria-label="Send message"
+                >
+                  <Send size={18} />
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* Trigger Button */}
       <motion.button
-        className="fixed bottom-4 right-4 z-50 p-4 bg-slate-100 text-slate-950 rounded-full shadow-lg hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-slate-100"
+        className="fixed bottom-4 right-4 z-50 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-blue-500"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={handleToggle}
+        onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle Chat"
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
