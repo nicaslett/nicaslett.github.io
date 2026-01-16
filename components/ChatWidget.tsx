@@ -16,7 +16,7 @@ export const ChatWidget = () => {
     {
       id: 'init-1',
       role: 'assistant',
-      text: 'Hi there! How can I help you today?',
+      text: 'How can I help you learn more about Nic today?',
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -137,7 +137,7 @@ export const ChatWidget = () => {
           >
             {/* Header */}
             <div className="bg-slate-800 p-4 flex items-center justify-between border-b border-slate-700">
-              <h3 className="text-slate-100 font-serif font-medium text-lg">Assistant</h3>
+              <h3 className="text-slate-100 font-serif font-medium text-lg">Ask me about Nic</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700"
