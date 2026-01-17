@@ -1,19 +1,8 @@
 "use client";
 import Image from "next/image";
 import { ScrollReveal } from "./ScrollReveal";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 
 export const Biography = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 0.75", "center center"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [50, 0]);
-
   return (
     <section className="py-20 px-6 md:px-20 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -35,18 +24,17 @@ export const Biography = () => {
          </div>
 
          {/* Image */}
-         <div ref={containerRef} className="order-1 lg:order-2">
-             <motion.div
-                style={{ opacity, y }}
-                className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden rounded-3xl bg-slate-800"
-             >
-                 <Image
-                    src="/profile.jpg"
-                    alt="Nic Aslett"
-                    fill
-                    className="object-cover"
-                 />
-            </motion.div>
+         <div className="order-1 lg:order-2">
+             <ScrollReveal>
+                <div className="relative w-full aspect-square md:aspect-[4/5] overflow-hidden rounded-3xl bg-slate-800">
+                    <Image
+                        src="/profile.jpg"
+                        alt="Nic Aslett"
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+             </ScrollReveal>
          </div>
       </div>
     </section>

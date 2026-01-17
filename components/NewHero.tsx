@@ -8,7 +8,7 @@ export const NewHero = () => {
   const opacity = useTransform(scrollY, [0, 100], [1, 0]);
 
   return (
-    <section className="min-h-[70vh] flex flex-col justify-center items-start px-6 md:px-20 max-w-7xl mx-auto pt-20 relative">
+    <section className="min-h-screen flex flex-col justify-center items-start px-6 md:px-20 max-w-7xl mx-auto pt-20 relative">
       <ScrollReveal>
         <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-tight font-bold tracking-tight mb-8 text-slate-100">
           Architecting Stability <br className="hidden md:block" /> at Scale.
@@ -36,7 +36,7 @@ export const NewHero = () => {
 
       <motion.div
         style={{ opacity }}
-        className="fixed bottom-8 left-0 right-0 z-50 flex flex-col items-center justify-center md:hidden pointer-events-none text-slate-400"
+        className="fixed bottom-8 left-0 right-0 z-50 flex flex-col items-center justify-center pointer-events-none text-slate-400"
       >
         <span className="text-xs uppercase tracking-widest mb-2">Scroll to learn more</span>
         <ChevronDown className="animate-bounce" size={20} />
