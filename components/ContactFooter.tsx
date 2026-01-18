@@ -5,7 +5,7 @@ export const ContactFooter = () => {
     return (
         <footer id="contact" className="py-20 border-t border-slate-800 mt-20">
             <div className="px-6 md:px-20 max-w-7xl mx-auto flex flex-col items-center text-center">
-                <h2 className="font-serif text-3xl text-slate-100 mb-8">Let's Connect</h2>
+                <h2 className="font-serif text-3xl text-slate-100 mb-8">Let&apos;s Connect</h2>
                 <div className="flex flex-row gap-8 justify-center items-center">
                     <a
                         href="mailto:nic@sylentt.com"

@@ -23,6 +23,9 @@ export const ChatWidget = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
 
+  const MAX_CHARS = 500;
+  const WEBHOOK_URL = process.env.NEXT_PUBLIC_CHAT_WEBHOOK_URL || 'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat';
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,12 +58,13 @@ export const ChatWidget = () => {
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
-    if (!inputValue.trim() || isLoading) return;
+    const trimmedInput = inputValue.trim();
+    if (!trimmedInput || isLoading || trimmedInput.length > MAX_CHARS) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
       role: 'user',
-      text: inputValue.trim(),
+      text: trimmedInput,
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -69,7 +73,7 @@ export const ChatWidget = () => {
 
     try {
       const response = await fetch(
-        'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat',
+        WEBHOOK_URL,
         {
           method: 'POST',
           headers: {
@@ -100,8 +104,9 @@ export const ChatWidget = () => {
       };
 
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch {
+      // Don't log full error details to console to prevent leakage
+      console.error('Message delivery failed');
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
@@ -137,7 +142,7 @@ export const ChatWidget = () => {
           >
             {/* Header */}
             <div className="bg-slate-800 p-4 flex items-center justify-between border-b border-slate-700">
-              <h3 className="text-slate-100 font-serif font-medium text-lg">Let's chat.</h3>
+              <h3 className="text-slate-100 font-serif font-medium text-lg">Let&apos;s chat.</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700"
@@ -181,19 +186,28 @@ export const ChatWidget = () => {
                 onSubmit={handleSendMessage}
                 className="flex items-center gap-2"
               >
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type a message..."
-                  className="flex-1 bg-slate-950 text-slate-200 rounded-lg px-4 py-3 text-sm border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-slate-500 transition-all"
-                  disabled={isLoading}
-                />
+                <div className="flex-1 relative">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type a message..."
+                    className={`w-full bg-slate-950 text-slate-200 rounded-lg pl-4 pr-12 py-3 text-sm border ${
+                      inputValue.length > MAX_CHARS ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-800 focus:border-blue-500 focus:ring-blue-500'
+                    } focus:outline-none focus:ring-1 placeholder-slate-500 transition-all`}
+                    disabled={isLoading}
+                  />
+                  <div className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                    inputValue.length > MAX_CHARS ? 'text-red-500 font-bold' : 'text-slate-600'
+                  }`}>
+                    {inputValue.length}/{MAX_CHARS}
+                  </div>
+                </div>
                 <button
                   type="submit"
-                  disabled={isLoading || !inputValue.trim()}
+                  disabled={isLoading || !inputValue.trim() || inputValue.length > MAX_CHARS}
                   className="bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-white p-3 rounded-lg transition-colors flex-shrink-0"
                   aria-label="Send message"
                 >
