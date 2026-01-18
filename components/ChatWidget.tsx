@@ -28,6 +28,8 @@ export const ChatWidget = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const hasOpened = useRef(false);
 
   // Initialize Session ID
   useEffect(() => {
@@ -46,12 +48,17 @@ export const ChatWidget = () => {
     }
   }, [messages, isOpen]);
 
-  // Focus input when chat opens
+  // Focus management
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 300); // Wait for animation
+    if (isOpen) {
+      hasOpened.current = true;
+      if (inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 300); // Wait for animation
+      }
+    } else if (hasOpened.current && triggerRef.current) {
+      triggerRef.current.focus();
     }
   }, [isOpen]);
 
@@ -139,6 +146,9 @@ export const ChatWidget = () => {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             className="fixed bottom-20 right-4 z-50 w-[90vw] sm:w-[350px] h-[500px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl flex flex-col overflow-hidden"
+            role="dialog"
+            aria-modal="false"
+            aria-label="Chat with assistant"
           >
             {/* Header */}
             <div className="bg-slate-800 p-4 flex items-center justify-between border-b border-slate-700">
@@ -173,7 +183,8 @@ export const ChatWidget = () => {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-slate-800 rounded-2xl rounded-bl-none px-4 py-3 border border-slate-700">
-                    <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                    <Loader2 className="w-5 h-5 animate-spin text-slate-400" aria-hidden="true" />
+                    <span className="sr-only">Thinking...</span>
                   </div>
                 </div>
               )}
@@ -199,9 +210,12 @@ export const ChatWidget = () => {
                     } focus:outline-none focus:ring-1 placeholder-slate-500 transition-all`}
                     disabled={isLoading}
                   />
-                  <div className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
-                    inputValue.length > MAX_CHARS ? 'text-red-500 font-bold' : 'text-slate-600'
-                  }`}>
+                  <div
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                      inputValue.length > MAX_CHARS ? 'text-red-500 font-bold' : 'text-slate-600'
+                    }`}
+                    aria-live="polite"
+                  >
                     {inputValue.length}/{MAX_CHARS}
                   </div>
                 </div>
@@ -221,11 +235,13 @@ export const ChatWidget = () => {
 
       {/* Trigger Button */}
       <motion.button
+        ref={triggerRef}
         className="fixed bottom-4 right-4 z-50 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-blue-500"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Chat"
+        aria-label={isOpen ? "Close chat" : "Open chat"}
+        aria-expanded={isOpen}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
       </motion.button>
