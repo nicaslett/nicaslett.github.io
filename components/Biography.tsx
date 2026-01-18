@@ -32,6 +32,7 @@ export const Biography = () => {
                         alt="Nic Aslett"
                         fill
                         className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                     />
                 </div>
              </ScrollReveal>
