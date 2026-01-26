@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export const StickyHeader = () => {
   return (
@@ -14,6 +15,21 @@ export const StickyHeader = () => {
         <h1 className="font-serif text-3xl md:text-4xl font-bold text-slate-100 tracking-tight">
           Nic Aslett
         </h1>
+        <a
+          href="https://www.sylentt.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-3 bg-slate-800 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-all duration-300 transform hover:scale-110"
+          aria-label="Sylentt Partners"
+        >
+          <Image
+            src="/sylentt-logo.png"
+            alt="Sylentt Partners"
+            width={49}
+            height={24}
+            className="w-auto h-6"
+          />
+        </a>
       </div>
     </motion.header>
   );
