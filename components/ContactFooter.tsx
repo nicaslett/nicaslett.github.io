@@ -1,5 +1,6 @@
 "use client";
 import { Mail, Linkedin } from "lucide-react";
+import Image from "next/image";
 
 export const ContactFooter = () => {
     return (
@@ -13,6 +14,21 @@ export const ContactFooter = () => {
                         aria-label="Email"
                     >
                         <Mail size={24} />
+                    </a>
+                    <a
+                        href="https://www.sylentt.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-slate-800 rounded-full text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-all duration-300 transform hover:scale-110"
+                        aria-label="Sylentt Partners"
+                    >
+                        <Image
+                            src="/sylentt-logo.png"
+                            alt="Sylentt Partners"
+                            width={49}
+                            height={24}
+                            className="w-auto h-6"
+                        />
                     </a>
                     <a
                         href="https://linkedin.com/in/nic-aslett"
