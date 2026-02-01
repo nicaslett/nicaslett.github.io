@@ -90,6 +90,9 @@ export const ChatWidget = () => {
             action: 'sendMessage',
             sessionId: sessionId,
             chatInput: userMessage.text,
+            metadata: {
+              sourceSite: 'nicaslett.info',
+            },
           }),
         }
       );
