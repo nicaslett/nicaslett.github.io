@@ -24,7 +24,7 @@ export const NewHero = () => {
             Get in Touch
           </button>
           <a
-            href="https://drive.google.com/file/d/1bUb2x7nHzDeDBftG6KpO2eD4o_veWQzN/view?usp=drive_link"
+            href="https://drive.google.com/file/d/1Vq9tLHEj1yayPlmxGsRhmRdzEHu-Ml0K/view"
             target="_blank"
             rel="noopener noreferrer"
             className="w-64 py-4 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white rounded-full font-medium transition-all text-lg text-center flex justify-center items-center"
