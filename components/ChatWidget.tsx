@@ -24,7 +24,7 @@ export const ChatWidget = () => {
   const [sessionId, setSessionId] = useState('');
 
   const MAX_CHARS = 500;
-  const WEBHOOK_URL = process.env.NEXT_PUBLIC_CHAT_WEBHOOK_URL || 'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat';
+  const WEBHOOK_URL = 'https://hnet.sylentt.com/webhook/61506b10-6711-4962-8025-43ccf7314403/chat';
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
