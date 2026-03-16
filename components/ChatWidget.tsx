@@ -53,7 +53,7 @@ export const ChatWidget = () => {
         webhookUrl: '${process.env.NEXT_PUBLIC_CHAT_WEBHOOK_URL || 'https://hnet.sylentt.com/webhook/fafb5729-49b2-4719-b227-a8db849677c4/chat'}',
         enableStreaming: true,
         initialMessages: [
-          'What can I tell you about my history?'
+          "What can I tell you about Nic's background?"
         ],
         i18n: {
           en: {
