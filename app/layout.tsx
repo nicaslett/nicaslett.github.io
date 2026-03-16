@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Nic Aslett | Technical Leader",
   description: "Personal portfolio of Nic Aslett, a Technical Leader specializing in IT Architecture and Stability at Scale.",
   other: {
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://hnet.sylentt.com; img-src 'self' data:;",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://hnet.sylentt.com https://cdn.jsdelivr.net; img-src 'self' data: https://cdn.jsdelivr.net;",
   },
 };
 
