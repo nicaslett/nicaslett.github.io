@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 export const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -25,7 +25,7 @@ export const BackToTop = () => {
     // Initial check
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -46,10 +46,10 @@ export const BackToTop = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 z-40 flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full shadow-xl cursor-pointer hover:bg-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+          className="fixed bottom-26 right-6 z-40 flex items-center justify-center text-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded-lg p-2"
           aria-label="Back to top"
         >
-          <ArrowUp className="w-6 h-6" />
+          <ChevronUp className="w-16 h-16 stroke-[3]" />
         </motion.button>
       )}
     </AnimatePresence>
