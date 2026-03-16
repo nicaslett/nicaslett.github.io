@@ -24,7 +24,7 @@ export const ChatWidget = () => {
       style.innerHTML = `
         :root {
           --chat--color--primary: #2563eb;
-          --chat--window--background: #020617;
+          --chat--body--background: #020617;
           --chat--header--background: #0f172a;
           --chat--message--bot--background: #0f172a;
           --chat--message--bot--color: #f8fafc;
@@ -32,6 +32,13 @@ export const ChatWidget = () => {
           --chat--footer--background: #020617;
           --chat--font-family: var(--font-inter), sans-serif;
           --chat--header--color: #f8fafc;
+          --chat--input--background: #0f172a;
+          --chat--input--container--background: #0f172a;
+          --chat--input--text-color: #f8fafc;
+          --chat--window--border: 1px solid #1e293b;
+          --chat--footer--border-top: 1px solid #1e293b;
+          --chat--toggle--background: #2563eb;
+          --chat--input--send--button--background: transparent;
         }
       `;
       document.head.appendChild(style);
